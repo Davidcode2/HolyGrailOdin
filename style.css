@@ -21,7 +21,7 @@ li {
 .header {
   height: 72px;
   background: white;
-  font-weight: bold;
+  font-weight: 100;
   font-size: 40px;
   font-family: inconsolata;
   color: black;
