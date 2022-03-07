@@ -33,11 +33,12 @@ content.appendChild(newDiv);
 
 const btn = document.querySelector('#btn');
 let toggled;
-btn.addEventListener('click', () => {
+btn.addEventListener('click', (e) => {
 	const parent = btn.parentElement;
 	if (toggled) {
 		toggled = false;
 		parent.style.cssText = "";
+		console.log(e);
 	} else {
 		toggled = true;
 		parent.style.cssText = 'text-align:center;background-color:orange;'
@@ -69,3 +70,114 @@ let hello = ["hello", "there"];
 // this is a callback function
 hello.forEach(yay => console.log(yay));
 
+/**
+ * 1. Step: Understanding the problem
+ * Play a single round of Rock paper scissors against the computer.
+ * 2. Step: Plan
+ * Console program
+ * Input: String, one of Rock, Paper, scissors
+ * Output: String you chose {}, computer chose {} Player won, Player lost
+ * Subproblems:
+ * userinput
+ * 	prompt("input rock, paper or scissors: ");
+ * 	check Input
+ * 		save in variable
+ * 	throw error
+ * computer decision
+ * 	randomly choose one of rock paper or scissors
+ * 	save in variable
+ * comparing decisions
+ * 	scissors > paper
+ * 	paper > rock
+ * 	rock > paper
+ * output result
+ */
+
+function computerDecision(options) {
+	let computerPick = options[Math.floor(Math.random() * options.length) % options.length];
+	return computerPick;
+}
+
+function capitalizeFirstLetter(text) {
+		let firstLetter = text[0].toUpperCase();
+		return firstLetter + text.slice(1);
+	}
+
+function subStringToLowerCase(text) {
+	return text[0] + text.slice(1).toLowerCase();
+}
+
+function playerDecision(options, countTries = 0) {
+	let playerPick = prompt("enter one of Rock, Paper or Scissors: ");
+	playerPick = capitalizeFirstLetter(playerPick);
+	playerPick = subStringToLowerCase(playerPick);
+	if (options.includes(playerPick)) {
+		return playerPick;
+	} else if (countTries < 3) {
+		console.log("your input matches none of the options Rock, Paper or Scissors.\nTry again.");
+		countTries++;
+		playerDecision(options, countTries);
+	} else {
+		console.log("You took too many tries.\nGame over");
+		return null;
+	}
+}
+
+function decide(playerPick, computerPick) {
+	if (playerPick == null) {
+		return null;
+	}
+	if (playerPick === computerPick) {
+		return null;
+	} else if (playerPick == "Scissors") {
+			if (computerPick == "Paper") {
+				return true;
+			}
+	} else if (playerPick == "Rock") {
+		if (computerPick === "Scissors") {
+			return true;
+		}
+	} else if (playerPick == "Paper") {
+		if (computerPick === "Rock") {
+			return true;
+		}
+	} else {
+		return false;
+	}
+}
+
+function game() {
+	let options = ["Rock", "Paper", "Scissors"];
+	let pickedMessage = "";
+	let roundOutcomeMessage = "";
+	let playerScore = 0;
+	let rounds = 3;
+	if (rounds%2 === 0) {
+		console.log("rounds must be unequal");
+		return null;
+	}
+	for(let i=0; i < rounds; i++) {
+		let computerPick = computerDecision(options);
+		let playerPick = playerDecision(options, 0);
+		let outcome = decide(playerPick, computerPick);
+		pickedMessage = `Your pick: ${playerPick}\nComputer pick: ${computerPick}`;
+		if (outcome == null) {
+			console.log("You tied, try again");
+			i--;
+			continue;
+		}
+		else if (outcome) {
+			playerScore++;
+		} 
+		roundOutcomeMessage = `score: ${playerScore}`;
+		console.log(`${pickedMessage}\n${roundOutcomeMessage}`);
+	}
+	let result = "lost";
+	if (playerScore >= rounds/2) {
+		result = "won";
+	} 
+	let outcomeMessage = `You ${result} with a score of ${playerScore} out of ${rounds}`;
+	console.log(outcomeMessage);
+}
+
+game();
