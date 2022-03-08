@@ -1,6 +1,10 @@
 body {
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+	font-family: inconsolata -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+	font-weight: 300;
+	font-size: 24px;
+	color: black;
 	margin: 0;
+	padding: 0;
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
@@ -30,6 +34,19 @@ li {
 	padding-top: 40px;
 	justify-content: start;
 	align-items: center;
+}
+
+.mainText {
+	height: 72px;
+	background: white;
+	font-weight: 100;
+	font-size: 30px;
+	font-family: inconsolata;
+	color: black;
+	display: flex;
+	justify-content: center;
+	align-items: start;
+
 }
 
 .footer {
@@ -72,6 +89,7 @@ li {
 
 .rpsSelect {
 	display: flex;
+	justify-content:center;
 	gap: 20px;
 }
 
@@ -107,4 +125,29 @@ li {
 	font-size: 22px;
 	color: darkgoldenrod;
 	font-weight:bolder;
+}
+
+.gameInfo {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 150px;
+	margin-left: 20px;
+	margin-right: 20px;
+	text-align:center;
+}
+
+.computerColumn .playerColumn .roundsColumn {
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: center;
+}
+
+.successMessage {
+	display:flex;
+	margin-top: 34px;
+	flex-direction:column;
+	justify-content:center;
+	align-items:center;
 }

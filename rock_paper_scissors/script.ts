@@ -25,8 +25,13 @@ console.log("this works");
 
 let playerPick;
 let playerScore = 0;
+let computerScore = 0;
 let rounds = 3;
+let actualRoundsPlayed = 0;
+let gameCounter = 0;
+let winCounter = 0;
 let choiceButton = document.querySelectorAll(".choiceButton");
+const options = ["Rock", "Paper", "Scissors"];
 
 function computerDecision(options) {
 	let computerPick = options[Math.floor(Math.random() * options.length) % options.length];
@@ -43,31 +48,53 @@ function subStringToLowerCase(text) {
 }
 
 function enablePlay() {
+	/* reset game */
+	actualRoundsPlayed = 0;
+	computerScore = 0;
+	playerScore = 0;
+	removeAllChildNodes(document.querySelector('.playerColumn'));
+	removeAllChildNodes(document.querySelector('.computerColumn'));
+	removeAllChildNodes(document.querySelector('.successMessage'));
+	document.querySelector('.playerColumn').textContent = "player pick";
+	document.querySelector('.computerColumn').textContent = "computer pick";
+	document.querySelector('.roundsColumn').textContent = "round ";
 	choiceButton.forEach(button => {
 		button.addEventListener('click', onClick)
 		toggleGrow;
 	});
 }
 
+function round() {
+	playerPick = capitalizeFirstLetter(playerPick);
+	playerPick = subStringToLowerCase(playerPick);
+	let computerPick = computerDecision(options);
+	return computerPick;
+}
+
 function onClick(e) {
 	if (e.target.innerText.includes("Paper")) playerPick = "paper";
 	if (e.target.innerText.includes("Scissors")) playerPick = "scissors";
 	if (e.target.innerText.includes("Rock")) playerPick = "rock";
-	playerPick = capitalizeFirstLetter(playerPick);
-	playerPick = subStringToLowerCase(playerPick);
-	let options = ["Rock", "Paper", "Scissors"];
-	let computerPick = computerDecision(options);
-	let outcome = decide(playerPick, computerPick);
-	let playerPickedMessage = `Your pick: ${playerPick}`
-	let computerPickedMessage = `Computer pick: ${computerPick}`;
+	let outcome;
+	let computerPick;
+	while (outcome == undefined) {
+		computerPick = round();
+		outcome = decide(playerPick, computerPick);
+		if ((Math.floor(Math.random() * 100)) < 20) outcome = null;
+	}
+	let playerPickedMessage = `${playerPick}`
+	let computerPickedMessage = `${computerPick}`;
 	let playerPickedMessageElem = document.createElement('div');
 	let computerPickedMessageElem = document.createElement('div');
+	let roundMessageElem = document.createElement('div');
 	playerPickedMessageElem.textContent = playerPickedMessage;
 	computerPickedMessageElem.textContent = computerPickedMessage;
-	document.querySelector('.content').appendChild(playerPickedMessageElem);
-	document.querySelector('.content').appendChild(computerPickedMessageElem);
+	roundMessageElem.textContent = String(actualRoundsPlayed);
+	document.querySelector('.playerColumn').appendChild(playerPickedMessageElem);
+	document.querySelector('.computerColumn').appendChild(computerPickedMessageElem);
+	document.querySelector('.roundsColumn').appendChild(roundMessageElem);
 	if (outcome == false) {
-		playerScore--;
+		computerScore++;
 	} else if (outcome == null) {
 		console.log("You tied, try again");
 	}
@@ -80,34 +107,45 @@ function onClick(e) {
 		console.error("number of rounds must be unequal");
 		return null;
 	}
+	actualRoundsPlayed++;
 	checkWin(e);
 }
 
 function checkWin(e) {
 	let result = "lost";
-	if (Math.abs(playerScore) >= rounds / 2) {
-		(playerScore > 0) ? result = "won" : result = "lost";
+	if (playerScore > Math.floor(rounds / 2) || computerScore > Math.floor(rounds / 2)) {
+		(playerScore > computerScore) ? result = "won" : result = "lost";
 		choiceButton.forEach(button => {
 			button.removeEventListener('click', onClick);
 		});
-		let outcomeMessage = `You ${result} with a score of ${playerScore} out of ${rounds}`;
+		let outcomeMessage = `You ${result} with a score of ${playerScore} out of ${actualRoundsPlayed}`;
 		let winMessageElem = document.createElement('div');
 		let gameStatsElem = document.createElement('div');
 		winMessageElem.textContent = `You ${result}`;
-		gameStatsElem.textContent = `with a score of ${playerScore} out of ${rounds}`;
+		gameStatsElem.textContent = `with a score of ${playerScore} out of ${actualRoundsPlayed}`;
 		(result == "won") ? winMessageElem.classList.add('win') : winMessageElem.classList.add('lose');
-		document.querySelector('.content').appendChild(winMessageElem);
-		document.querySelector('.content').appendChild(gameStatsElem);
+		document.querySelector('.successMessage').appendChild(winMessageElem);
+		document.querySelector('.successMessage').appendChild(gameStatsElem);
 		/* stop growing elements on hover */
 		toggleGrow(e);
 		let replayButtonElem = document.createElement('div');
 		replayButtonElem.textContent = "菱"
+		replayButtonElem.style.fontSize = "24px";
 		replayButtonElem.addEventListener('click', enablePlay);
-		document.querySelector('.content').appendChild(replayButtonElem);
+		document.querySelector('.successMessage').appendChild(replayButtonElem);
 		console.log(outcomeMessage);
+		gameCounter++;
+		if (outcomeMessage) winCounter++;
 		return outcomeMessage;
 	}
 }
+
+function removeAllChildNodes(parent) {
+	while (parent.firstChild) {
+		parent.removeChild(parent.firstChild);
+	}
+}
+
 function getAllSiblings(elem, filter) {
 	var sibs = [];
 	elem = elem.parentNode.firstChild;
