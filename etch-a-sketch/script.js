@@ -39,12 +39,16 @@ function fieldAddListener(type, addClass, removeClass, func) {
 	}
 }
 
-window.addEventListener('resize', function(event) {
+function redrawCanvas(size) {
 	gridWrapper.remove();
 	gridWrapper = document.createElement('div');
 	gridWrapper.classList.add('gridWrapper');
 	document.querySelector('.content').appendChild(gridWrapper);
-	renderCanvas();
+	renderCanvas(size);
+}
+
+window.addEventListener('resize', function(event) {
+	redrawCanvas();
 }, true);
 
 let clearButton = document.querySelector('.clearButton');
@@ -85,6 +89,7 @@ function checkFieldSizeForm() {
 	if (canvasSize == "" || canvasSize < 10 || canvasSize > 100) {
 		if (!(message in formDiv.childNodes)) formDiv.appendChild(message)
 	} else if ([...formDiv.childNodes].includes(message)) formDiv.removeChild(message);
+	redrawCanvas(canvasSize);
 }
 
 let submitButton = document.querySelector('.submitButton');
