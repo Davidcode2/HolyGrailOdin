@@ -128,6 +128,17 @@ li {
 	text-align: center;
 	font-size: 40px;
 }
+
+.formDiv {
+	display: flex;
+	gap: 10px;
+	align-items: baseline;
+}
+
+.submitButton {
+	height: 25px;
+}
+
 .grow:hover {
 	transition: all .02s ease-in-out;
 	transform: scale(1.1);
